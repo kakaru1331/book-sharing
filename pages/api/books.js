@@ -6,7 +6,7 @@ const { publicRuntimeConfig } = getConfig()
 
 export default async function getBooks(req, res) {
   const db = await open({
-    filename: path.join(publicRuntimeConfig.PROJECT_ROOT, './db/book-sharing.db'),
+    filename: path.join(publicRuntimeConfig.PROJECT_ROOT, '/db/book-sharing.db'),
     driver: sqlite3.Database
   })
 

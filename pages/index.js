@@ -7,13 +7,18 @@ import { UserOutlined } from "@ant-design/icons";
 
 export default function Home() {
   const [books, setBooks] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/books')
     .then(response => response.json())
     .then(books => {
       setBooks(books)
-    });
+      setIsLoading(false)
+    })
+    .catch(() => {
+      setIsLoading(false)
+    })
   }, [])
 
   return (
@@ -29,6 +34,8 @@ export default function Home() {
         </h1>
 
         <div className="grid">
+          {books.length === 0 && isLoading && "로딩중..."}
+          {books.length === 0 && !isLoading && "오류가 발생했습니다."}
           {books.length > 0 && books.map((book, index) => {
             return (
               <Link href="books/book" key={index}>

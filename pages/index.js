@@ -38,9 +38,9 @@ export default function Home() {
           {books.length === 0 && !isLoading && "오류가 발생했습니다."}
           {books.length > 0 && books.map((book, index) => {
             return (
-              <Link href="books/book" key={index}>
+              <Link href="#" key={index}>
                 <a className="card">
-                  {book.image_path && <img src={book.image_path} className="book-cover"></img>}
+                  {book.imagePath && <img src={book.imagePath} className="book-cover"></img>}
                   <h3 className="book-title">{book.title} &rarr;</h3>
                   <p>
                     <span className="applicant">

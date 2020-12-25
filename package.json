@@ -1,15 +1,18 @@
 {
-  "name": "learn-starter",
+  "name": "book-sharing",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.3.0",
+    "antd": "^4.9.4",
     "next": "^10.0.0",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "sqlite": "^4.0.18",
+    "sqlite3": "^5.0.0"
   }
 }

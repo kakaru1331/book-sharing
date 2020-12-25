@@ -1,23 +1,20 @@
 import Head from 'next/head'
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import "antd/dist/antd.css";
+import { Avatar, Badge } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 export default function Home() {
-  const books = [
-    {
-      title: '알고리즘 도감',
-      authors: [
-        '이시다 모리테루',
-        '미야자키 쇼이치'
-      ],
-      publishers: '제이펍'
-    },
-    {
-      title: 'JavaScript Patterns',
-      authors: [
-        '스토얀 스테파노프'
-      ],
-      publishers: '인사이트'
-    }
-  ]
+  const [books, setBooks] = useState([])
+
+  useEffect(() => {
+    fetch('/api/books')
+    .then(response => response.json())
+    .then(books => {
+      setBooks(books)
+    });
+  }, [])
 
   return (
     <div className="container">
@@ -32,13 +29,22 @@ export default function Home() {
         </h1>
 
         <div className="grid">
-          {books.map((book) => {
+          {books.length > 0 && books.map((book, index) => {
             return (
-              <a href="#" className="card">
-                <img src=""></img>
-                <h3>{book.title} &rarr;</h3>
-                <p>Find in-depth information about Next.js features and API.</p>
-              </a>  
+              <Link href="books/book" key={index}>
+                <a className="card">
+                  {book.image_path && <img src={book.image_path} className="book-cover"></img>}
+                  <h3 className="book-title">{book.title} &rarr;</h3>
+                  <p>
+                    <span className="applicant">
+                      응모인원: 
+                    </span>
+                    <Badge count={1}>
+                      <Avatar shape="square" icon={<UserOutlined />} />
+                    </Badge>
+                  </p>          
+                </a>
+              </Link>
             )
           })}
         </div>
@@ -140,6 +146,23 @@ export default function Home() {
             flex-direction: column;
           }
         }
+
+        .book-cover {
+          width: 100%;
+          height: 300px;
+          margin-bottom: 1rem;
+        }
+
+        .book-title {
+          min-height: 3.5rem;
+        }
+
+        .applicant {
+          vertical-align: middle;
+          margin-right: 0.3rem;
+        }
+
+        .
       `}</style>
 
       <style jsx global>{`

@@ -98,7 +98,7 @@ const events = [
     bookID: 24
   },
 ].map((event) => {
-  const book = books.find((book) => event.bookID == book.bookID)
+  const book = books.find((book) => event.bookID === book.bookID)
   
   return { 
     ...event,

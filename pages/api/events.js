@@ -1,4 +1,5 @@
 import events from '../../data/events'
+import applications from '../../data/applications'
 
 export default async function handle(req, res) {
   if (req.method === 'GET') {
@@ -12,5 +13,14 @@ export default async function handle(req, res) {
 
 // GET /api/events
 async function handleGET(res) {
-  res.json(events)
+  const eventsWithApplicant = events.map(event => {
+    const countOfApplicant = applications.filter(application => application.eventID === event.eventID).length
+
+    return {
+      ...event,
+      countOfApplicant
+    }
+  })
+
+  res.json(eventsWithApplicant)
 }

@@ -6,18 +6,23 @@ import { Avatar, Badge } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 export default function Home() {
-  const [books, setBooks] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [events, setEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
-    fetch('/api/books')
+    setIsLoading(true)
+
+    fetch('/api/events')
     .then(response => response.json())
-    .then(books => {
-      setBooks(books)
+    .then(events => {
+      setEvents(events)
       setIsLoading(false)
+      setIsError(false)
     })
     .catch(() => {
       setIsLoading(false)
+      setIsError(true)
     })
   }, [])
 
@@ -34,22 +39,27 @@ export default function Home() {
         </h1>
 
         <div className="grid">
-          {books.length === 0 && isLoading && "로딩중..."}
-          {books.length === 0 && !isLoading && "오류가 발생했습니다."}
-          {books.length > 0 && books.map((book, index) => {
+          {/* 로딩 */}
+          {isLoading && "로딩중..."}
+
+          {/* 에러 */}
+          {isError && !isLoading && "오류가 발생했습니다."}
+
+          {/* 정상 */}
+          {events.length > 0 && events.map((event, index) => {
             return (
-              <Link href="#" key={index}>
+              <Link href={`/event/${event.eventID}`} key={index}>
                 <a className="card">
-                  {book.imagePath && <img src={book.imagePath} className="book-cover"></img>}
-                  <h3 className="book-title">{book.title} &rarr;</h3>
-                  <p>
+                  {event.imagePath && <img src={event.imagePath} className="book-cover" />}
+                  <h3 className="book-title">{event.title} &rarr;</h3>
+                  <div>
                     <span className="applicant">
                       응모인원: 
                     </span>
                     <Badge count={1}>
                       <Avatar shape="square" icon={<UserOutlined />} />
                     </Badge>
-                  </p>          
+                  </div>
                 </a>
               </Link>
             )

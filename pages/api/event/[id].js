@@ -1,4 +1,5 @@
 import events from '../../../data/events'
+import applications from '../../../data/applications'
 
 export default async function handle(req, res) {
   const {
@@ -17,6 +18,14 @@ export default async function handle(req, res) {
 // GET /api/events
 async function handleGET(eventID, res) {
   const event = events.find(e => e.eventID === eventID)
+  const relatedApplication = applications.filter(application => application.eventID === event.eventID)
+  const countOfApplicant = relatedApplication.length
   
-  res.json(event)
+  const data = {
+    event,
+    relatedApplication,
+    countOfApplicant
+  }
+  
+  res.json(data)
 }

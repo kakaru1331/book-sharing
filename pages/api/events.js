@@ -1,4 +1,4 @@
-import prisma from '../../lib/prisma'
+import events from '../../data/events'
 
 export default async function handle(req, res) {
   if (req.method === 'GET') {
@@ -10,9 +10,7 @@ export default async function handle(req, res) {
   }
 }
 
-// GET /api/books
+// GET /api/events
 async function handleGET(res) {
-  const books = await prisma.book.findMany()
-  
-  res.json(books)
+  res.json(events)
 }

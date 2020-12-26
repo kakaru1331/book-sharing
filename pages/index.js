@@ -56,7 +56,7 @@ export default function Home() {
                     <span className="applicant">
                       응모인원: 
                     </span>
-                    <Badge count={1}>
+                    <Badge count={event.countOfApplicant}>
                       <Avatar shape="square" icon={<UserOutlined />} />
                     </Badge>
                   </div>
@@ -180,21 +180,6 @@ export default function Home() {
         }
 
         .
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
       `}</style>
     </div>
   )

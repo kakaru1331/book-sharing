@@ -2,8 +2,8 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import "antd/dist/antd.css";
-import { Avatar, Badge, List } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Badge, List, Button } from "antd";
+import { UserOutlined, FireOutlined } from "@ant-design/icons";
 import LayoutDefault from '../../components/LayoutDefault'
 
 function randomColor() {
@@ -18,9 +18,46 @@ export default function event() {
   const [eventInfo, setEventInfo] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [isShuffling, setIsShuffling] = useState(false)
+  const [displayingApplication, setDisplayingApplication] = useState(null)
+  const [intervalRef, setIntervalRef] = useState(null)
+
+  function startShuffle (e) {
+    if (isShuffling) {
+      return
+    } 
+
+    setIsShuffling(true)
+    setIntervalRef(setInterval(shuffleApplication, 20))
+  }
+
+  function pickAWinner (e) {
+    if (!intervalRef) {
+      return
+    }
+
+    setIsShuffling(false)
+    clearInterval(intervalRef)
+    setIntervalRef(null)
+  }
+
+  function shuffleApplication () {
+    const { relatedApplications } = eventInfo
+    const displayApplicationIndex = Math.floor(Math.random() * relatedApplications.length)
+    
+    setDisplayingApplication({
+      relatedApplication: relatedApplications[displayApplicationIndex],
+      style: {
+        fontSize: 15 + (Math.random() * 15) + 'px',
+        color: "#" + (parseInt(Math.random() * 0xffffff)).toString(16),
+        textAlign: 'center'
+      }
+    })
+  }
 
   useEffect(() => {
     const id = Object.keys(router.query).length > 0 ? router.query.id : location.pathname.replace('/event/', '')
+    setIsLoading(true)
 
     fetch(`/api/event/${id}`)
     .then(response => response.json())
@@ -59,11 +96,56 @@ export default function event() {
             {/* 정상 */}
             {eventInfo &&
               <div className="card">
+                {/* 책 영역 */}
                 {eventInfo.event.imagePath && <img src={eventInfo.event.imagePath} className="book-cover" />}
                 <h3 className="book-title">{eventInfo.event.title}</h3>
                 <p>
                   {eventInfo.event.authors}
                 </p>
+
+                {/* 당첨 */}
+                {eventInfo.winningApplication &&
+                <div className="winning-container">
+                  <span>당첨자: </span>
+                  <FireOutlined />
+                  <a
+                    href={eventInfo.winningApplication.profileURL}
+                    target="_blank"
+                  >
+                    <span className="winner">{eventInfo.winningApplication.userName}</span> 님
+                  </a>
+                  <FireOutlined />
+                </div>                
+                }
+
+                {/* 미니게임 영역 */}
+                {eventInfo.relatedApplications.length > 1 &&
+                <div className="lottery-container">
+                  <h2>미니게임</h2>
+                  <div className="lottery-display" style={displayingApplication?.style}>
+                    {!displayingApplication && 
+                      '평행세계의 당첨자는?'
+                    }
+                    {displayingApplication && 
+                    displayingApplication.relatedApplication.userName
+                    }
+                  </div>
+                  <div className="lottery-controller">
+                    {!isShuffling && 
+                    <Button type="primary" onClick={startShuffle}>
+                      {displayingApplication ? '재추첨' : '추첨시작'}
+                    </Button>
+                    }
+                    {isShuffling && 
+                    <Button type="primary" onClick={pickAWinner}>
+                      뽑기!
+                    </Button>
+                    }
+                  </div>
+                </div>
+                }
+
+                {/* 이벤트 응모 영역 */}
                 <div className="applicant-count">
                   <span className="applicant">
                     응모인원: 
@@ -74,7 +156,7 @@ export default function event() {
                 </div>
                 <List
                   itemLayout="horizontal"
-                  dataSource={eventInfo.relatedApplication}
+                  dataSource={eventInfo.relatedApplications}
                   renderItem={item => (
                     <List.Item>
                       <List.Item.Meta
@@ -84,7 +166,7 @@ export default function event() {
                               backgroundColor: randomColor()
                             }}
                           >
-                            {item.userName.length > 2 ? item.userName.substring(0, 2) : item.userName}
+                            {item.userName.length > 1 ? item.userName.substring(0, 1) : item.userName}
                           </Avatar>
                         }
                         title={
@@ -165,11 +247,10 @@ export default function event() {
             flex-basis: 100%;
             padding: 1.5rem;
             text-align: left;
-            color: inherit;
             text-decoration: none;
             border: 1px solid #eaeaea;
             border-radius: 10px;
-            transition: color 0.15s ease, border-color 0.15s ease;
+            transition: border-color 0.15s ease;
           }
 
           .card:hover,
@@ -209,9 +290,6 @@ export default function event() {
             max-width: 400px;
           }
 
-          .book-title {
-          }
-
           .applicant {
             vertical-align: middle;
             margin-right: 0.3rem;
@@ -219,6 +297,34 @@ export default function event() {
 
           .applicant-count {
             padding-bottom: 0.5rem;
+          }
+          
+          .lottery-container {
+            margin: 1.5rem 0.5rem;
+            padding: 0.5rem;
+            text-align: center;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
+          }
+
+          .lottery-display {
+            margin: 0.2rem;
+            padding: 0.2rem;
+            text-align: center;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
+            min-height: 10rem;
+            line-height: 10rem;
+          }
+
+          .winner {
+            font-weight: 800;
+            color: coral;
+          }
+
+          .winning-container {
+            font-size: 1rem;
+            padding-bottom: 1rem;
           }
         `}</style>
       </div>

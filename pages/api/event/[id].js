@@ -1,5 +1,6 @@
 import events from '../../../data/events'
 import applications from '../../../data/applications'
+import eventResults from '../../../data/eventResults'
 
 export default async function handle(req, res) {
   const {
@@ -18,13 +19,18 @@ export default async function handle(req, res) {
 // GET /api/events
 async function handleGET(eventID, res) {
   const event = events.find(e => e.eventID === eventID)
-  const relatedApplication = applications.filter(application => application.eventID === event.eventID)
-  const countOfApplicant = relatedApplication.length
+  const relatedApplications = applications.filter(application => application.eventID === event.eventID)
+  const countOfApplicant = relatedApplications.length
+  const relatedEventResult = eventResults.find(eventResult => eventResult.eventID === event.eventID) || null
+  const winningApplication = relatedEventResult
+    ? relatedApplications.find(application => application.applicationID === relatedEventResult.applicationID) 
+    : null
   
   const data = {
     event,
-    relatedApplication,
-    countOfApplicant
+    relatedApplications,
+    countOfApplicant,
+    winningApplication
   }
   
   res.json(data)

@@ -1,75 +1,40 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import "antd/dist/antd.css";
-import { Avatar, Badge, List, Button } from "antd";
-import { UserOutlined, FireOutlined } from "@ant-design/icons";
+import 'antd/dist/antd.css'
+import { Avatar, Badge, List } from 'antd'
+import { UserOutlined, FireOutlined } from '@ant-design/icons'
 import LayoutDefault from '../../components/LayoutDefault'
+import Lottery from '../../components/Lottery'
 
-function randomColor() {
-  let hex = Math.floor(Math.random() * 0xFFFFFF);
-  let color = "#" + hex.toString(16);
+function randomColor () {
+  const hex = Math.floor(Math.random() * 0xFFFFFF)
+  const color = '#' + hex.toString(16)
 
-  return color;
+  return color
 }
 
-export default function event() {
+export default function event () {
   const router = useRouter()
   const [eventInfo, setEventInfo] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
-  const [isShuffling, setIsShuffling] = useState(false)
-  const [displayingApplication, setDisplayingApplication] = useState(null)
-  const [intervalRef, setIntervalRef] = useState(null)
-
-  function startShuffle (e) {
-    if (isShuffling) {
-      return
-    } 
-
-    setIsShuffling(true)
-    setIntervalRef(setInterval(shuffleApplication, 20))
-  }
-
-  function pickAWinner (e) {
-    if (!intervalRef) {
-      return
-    }
-
-    setIsShuffling(false)
-    clearInterval(intervalRef)
-    setIntervalRef(null)
-  }
-
-  function shuffleApplication () {
-    const { relatedApplications } = eventInfo
-    const displayApplicationIndex = Math.floor(Math.random() * relatedApplications.length)
-    
-    setDisplayingApplication({
-      relatedApplication: relatedApplications[displayApplicationIndex],
-      style: {
-        fontSize: 15 + (Math.random() * 15) + 'px',
-        color: "#" + (parseInt(Math.random() * 0xffffff)).toString(16),
-        textAlign: 'center'
-      }
-    })
-  }
 
   useEffect(() => {
     const id = Object.keys(router.query).length > 0 ? router.query.id : location.pathname.replace('/event/', '')
     setIsLoading(true)
 
     fetch(`/api/event/${id}`)
-    .then(response => response.json())
-    .then(data => {
-      setEventInfo(data)
-      setIsLoading(false)
-      setIsError(false)
-    })
-    .catch(() => {
-      setIsLoading(false)
-      setIsError(true)
-    })
+      .then(response => response.json())
+      .then(data => {
+        setEventInfo(data)
+        setIsLoading(false)
+        setIsError(false)
+      })
+      .catch(() => {
+        setIsLoading(false)
+        setIsError(true)
+      })
   }, [])
 
   return (
@@ -88,10 +53,10 @@ export default function event() {
 
           <div className="grid">
             {/* 로딩 */}
-            {isLoading && "로딩중..."}
+            {isLoading && '로딩중...'}
 
             {/* 에러 */}
-            {isError && !isLoading && "오류가 발생했습니다."}
+            {isError && !isLoading && '오류가 발생했습니다.'}
 
             {/* 정상 */}
             {eventInfo &&
@@ -115,40 +80,18 @@ export default function event() {
                     <span className="winner">{eventInfo.winningApplication.userName}</span> 님
                   </a>
                   <FireOutlined />
-                </div>                
+                </div>
                 }
 
                 {/* 미니게임 영역 */}
                 {eventInfo.relatedApplications.length > 1 &&
-                <div className="lottery-container">
-                  <h2>미니게임</h2>
-                  <div className="lottery-display" style={displayingApplication?.style}>
-                    {!displayingApplication && 
-                      '평행세계의 당첨자는?'
-                    }
-                    {displayingApplication && 
-                    displayingApplication.relatedApplication.userName
-                    }
-                  </div>
-                  <div className="lottery-controller">
-                    {!isShuffling && 
-                    <Button type="primary" onClick={startShuffle}>
-                      {displayingApplication ? '재추첨' : '추첨시작'}
-                    </Button>
-                    }
-                    {isShuffling && 
-                    <Button type="primary" onClick={pickAWinner}>
-                      뽑기!
-                    </Button>
-                    }
-                  </div>
-                </div>
+                <Lottery relatedApplications={eventInfo.relatedApplications}/>
                 }
 
                 {/* 이벤트 응모 영역 */}
                 <div className="applicant-count">
                   <span className="applicant">
-                    응모인원: 
+                    응모인원:
                   </span>
                   <Badge count={eventInfo.countOfApplicant}>
                     <Avatar shape="square" icon={<UserOutlined />} />
@@ -161,7 +104,7 @@ export default function event() {
                     <List.Item>
                       <List.Item.Meta
                         avatar={
-                          <Avatar 
+                          <Avatar
                             style={{
                               backgroundColor: randomColor()
                             }}
@@ -170,9 +113,10 @@ export default function event() {
                           </Avatar>
                         }
                         title={
-                          <a 
+                          <a
                             href={item.profileURL}
                             target="_blank"
+                            rel="noreferrer"
                           >
                             {item.userName}
                           </a>
@@ -298,24 +242,6 @@ export default function event() {
           .applicant-count {
             padding-bottom: 0.5rem;
           }
-          
-          .lottery-container {
-            margin: 1.5rem 0.5rem;
-            padding: 0.5rem;
-            text-align: center;
-            border: 1px solid #eaeaea;
-            border-radius: 10px;
-          }
-
-          .lottery-display {
-            margin: 0.2rem;
-            padding: 0.2rem;
-            text-align: center;
-            border: 1px solid #eaeaea;
-            border-radius: 10px;
-            min-height: 10rem;
-            line-height: 10rem;
-          }
 
           .winner {
             font-weight: 800;
@@ -328,6 +254,6 @@ export default function event() {
           }
         `}</style>
       </div>
-    </>    
+    </>
   )
 }

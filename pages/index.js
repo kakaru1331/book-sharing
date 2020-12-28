@@ -1,12 +1,12 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import "antd/dist/antd.css";
-import { Avatar, Badge } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import 'antd/dist/antd.css'
+import { Avatar, Badge } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 import LayoutDefault from '../components/LayoutDefault'
 
-export default function Home() {
+export default function Home () {
   const [events, setEvents] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
@@ -15,16 +15,16 @@ export default function Home() {
     setIsLoading(true)
 
     fetch('/api/events')
-    .then(response => response.json())
-    .then(events => {
-      setEvents(events)
-      setIsLoading(false)
-      setIsError(false)
-    })
-    .catch(() => {
-      setIsLoading(false)
-      setIsError(true)
-    })
+      .then(response => response.json())
+      .then(events => {
+        setEvents(events)
+        setIsLoading(false)
+        setIsError(false)
+      })
+      .catch(() => {
+        setIsLoading(false)
+        setIsError(true)
+      })
   }, [])
 
   return (
@@ -43,10 +43,10 @@ export default function Home() {
 
           <div className="grid">
             {/* 로딩 */}
-            {isLoading && "로딩중..."}
+            {isLoading && '로딩중...'}
 
             {/* 에러 */}
-            {isError && !isLoading && "오류가 발생했습니다."}
+            {isError && !isLoading && '오류가 발생했습니다.'}
 
             {/* 정상 */}
             {events.length > 0 && events.map((event, index) => {
@@ -57,7 +57,7 @@ export default function Home() {
                     <h3 className="book-title">{event.title} &rarr;</h3>
                     <div>
                       <span className="applicant">
-                        응모인원: 
+                        응모인원:
                       </span>
                       <Badge count={event.countOfApplicant}>
                         <Avatar shape="square" icon={<UserOutlined />} />

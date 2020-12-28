@@ -1,9 +1,9 @@
-import { Layout, Menu, BackTop } from 'antd';
+import { Layout, Menu, BackTop } from 'antd'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-export default function TopNav() {
-  const { Header } = Layout;
+export default function TopNav () {
+  const { Header } = Layout
   const [selectedKey, setSelectedKey] = useState('')
 
   useEffect(() => {
@@ -13,9 +13,9 @@ export default function TopNav() {
   return (
     <>
       <Header>
-        <Menu 
-          theme="dark" 
-          mode="horizontal" 
+        <Menu
+          theme="dark"
+          mode="horizontal"
           defaultSelectedKeys={['/']}
           selectedKeys={[selectedKey]}
         >

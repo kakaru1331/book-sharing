@@ -1198,7 +1198,7 @@ const applications = [
     eventID: 2,
     userName: '신예진',
     profileURL: 'https://www.facebook.com/profile.php?id=100011001224767'
-  },
+  }
 ]
 
 export default applications

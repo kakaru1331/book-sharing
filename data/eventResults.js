@@ -22,12 +22,12 @@ const eventResults = [
   {
     eventResultID: 5,
     eventID: 5,
-    applicationID: 132
+    applicationID: 13
   },
   {
     eventResultID: 6,
     eventID: 6,
-    applicationID: 114
+    applicationID: 86
   },
   {
     eventResultID: 7,
@@ -37,7 +37,7 @@ const eventResults = [
   {
     eventResultID: 8,
     eventID: 8,
-    applicationID: 157
+    applicationID: 189
   },
   {
     eventResultID: 9,
@@ -47,7 +47,7 @@ const eventResults = [
   {
     eventResultID: 10,
     eventID: 10,
-    applicationID: 145
+    applicationID: 50
   },
   {
     eventResultID: 11,
@@ -62,7 +62,7 @@ const eventResults = [
   {
     eventResultID: 13,
     eventID: 13,
-    applicationID: 127
+    applicationID: 22
   },
   {
     eventResultID: 14,
@@ -97,7 +97,7 @@ const eventResults = [
   {
     eventResultID: 20,
     eventID: 20,
-    applicationID: 75
+    applicationID: 27
   },
   {
     eventResultID: 21,
@@ -117,8 +117,8 @@ const eventResults = [
   {
     eventResultID: 24,
     eventID: 24,
-    applicationID: 46
-  },
+    applicationID: 24
+  }
 ]
 
 export default eventResults
